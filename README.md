@@ -98,8 +98,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 - Add multilingual support
 - Fine-tune on domain-specific news corpus
 
-## Deployment Link
-[Live Demo on Gradio] (update with your deployed link)
+
 # Task2 Telco Customer Churn — End-to-End ML Pipeline
 
 ## Objective
