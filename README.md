@@ -1,4 +1,105 @@
 # DevelopersHub_AI_ML_Internship_Advaned_Tasks
+# Task 1: News Topic Classifier Using BERT
+
+## Objective
+Fine-tune BERT-base-uncased to classify news headlines into 4 categories: 
+World, Sports, Business, and Science/Tech.
+
+## Dataset
+- **Source:** AG News Dataset
+- **Size:** 120,000 training, 7,600 test samples
+- **Task:** 4-class text classification
+
+## Results
+
+### Performance Metrics
+- **Accuracy:** 94.08%
+- **F1-Score (weighted):** 94.09%
+
+### Per-Class Performance
+| Class | Precision | Recall | F1-Score |
+|-------|-----------|--------|----------|
+| World | 97% | 94% | 95% |
+| Sports | 98% | 99% | 99% |
+| Business | 89% | 93% | 91% |
+| Science/Tech | 93% | 91% | 92% |
+
+## Methodology
+
+### 1. Data Preprocessing
+- Loaded AG News dataset from CSV
+- Combined title + description into single text field
+- Converted labels to 0-indexed format
+
+### 2. Tokenization
+- Used BERT-base-uncased tokenizer
+- Max sequence length: 128 tokens
+- Applied padding and truncation
+
+### 3. Model Fine-tuning
+- Base Model: BERT-base-uncased (110M parameters, 12 layers)
+- Epochs: 3
+- Batch size: 16
+- Learning rate: 5e-5
+- Optimizer: AdamW
+- Training time: 2-3 hours on T4 GPU
+
+### 4. Evaluation
+- Metrics: Accuracy, F1-score, Confusion Matrix
+- No severe overfitting detected
+- Stable validation loss across epochs
+
+## Key Findings
+
+1. **Sports category** is easiest to classify (99% recall)
+2. **Business-Science/Tech overlap** due to topic similarity
+3. Model achieves **near-human level accuracy** (94%+)
+4. **Production-ready** for deployment
+
+## Files Included
+- `Task1_BERT_News_Classifier.ipynb` — Complete training notebook
+- `confusion_matrix.png` — Evaluation visualization
+- `README.md` — This file
+
+## How to Use
+
+### Option 1: Run in Colab
+1. Open `Task1_BERT_News_Classifier.ipynb` in Google Colab
+2. Run all cells
+3. Model trains and evaluates automatically
+
+### Option 2: Deploy with Gradio
+```python
+import gradio as gr
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+# Load model and create interface
+# See notebook for complete deployment code
+```
+
+## Technologies Used
+- **PyTorch** — Deep learning framework
+- **Transformers** — Hugging Face BERT
+- **Scikit-learn** — Evaluation metrics
+- **Gradio** — Web deployment
+- **Pandas, NumPy** — Data processing
+
+## Skills Demonstrated
+✅ NLP using Transformers  
+✅ Transfer learning & fine-tuning  
+✅ Text classification  
+✅ Model evaluation (accuracy, F1-score, confusion matrix)  
+✅ Deployment with Gradio  
+✅ GPU training optimization  
+
+## Future Improvements
+- Deploy to Hugging Face Spaces for persistent public access
+- Experiment with larger models (BERT-large, RoBERTa)
+- Add multilingual support
+- Fine-tune on domain-specific news corpus
+
+## Deployment Link
+[Live Demo on Gradio] (update with your deployed link)
 # Task2 Telco Customer Churn — End-to-End ML Pipeline
 
 ## Objective
