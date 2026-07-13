@@ -143,3 +143,34 @@ import joblib
 pipeline = joblib.load("churn_pipeline.joblib")
 predictions = pipeline.predict(new_raw_customer_dataframe)
 ```
+# Task 3 Multimodal Housing Price Prediction — Images + Tabular Data
+
+## Objective
+Predict housing sale prices by combining structured tabular data (bedrooms, bathrooms, square footage, city) with visual features extracted from house photos using a pretrained CNN. This multimodal approach tests whether visual information (curb appeal, condition, architectural style) adds predictive power beyond what tabular attributes alone can capture, evaluated using MAE and RMSE.
+
+## Dataset
+[House Prices and Images - SoCal](https://www.kaggle.com/datasets/ted8080/house-prices-and-images-socal) (Kaggle) — 15,474 Southern California home listings, each with one photo and matching tabular data (price, bed, bath, sqft, city). After removing 3 rows with data-entry errors (implausible bathroom counts), 15,471 rows were used.
+
+## Methodology / Approach
+1. **Data loading & cleaning** — linked each tabular row to its image via `image_id` (all 15,474 images matched, 0 missing); removed 3 rows with physically implausible bathroom counts (e.g. 36 bathrooms in a 1,229 sqft home).
+2. **Train/test split** — 80/20 split (12,376 / 3,095 houses), performed *before* any feature extraction or scaling to prevent data leakage.
+3. **Image feature extraction (CNN)** — used ResNet50 pretrained on ImageNet as a fixed feature extractor (`include_top=False`, `pooling="avg"`), producing a 2,048-dimensional feature vector per house photo. No CNN training was needed since we reused ImageNet-learned visual features via transfer learning.
+4. **Tabular preprocessing** — numeric features (`bed`, `bath`, `sqft`) scaled with `StandardScaler`; `citi` (411 unique cities) one-hot encoded. Both fit only on the training set.
+5. **Feature fusion** — image features (2,048-dim), numeric tabular (3-dim), and city one-hot (411-dim) concatenated into a single 2,462-dimensional feature vector per house.
+6. **Modeling** — Random Forest Regressor trained on the fused features to predict `log(1 + price)` (log-transformed to correct for the right-skewed price distribution), tuned via `GridSearchCV` over `n_estimators`, `max_depth`, and `min_samples_split`.
+7. **Evaluation** — predictions converted back to dollar scale (`expm1`) and evaluated with MAE and RMSE, compared directly against a tabular-only baseline (same model, same hyperparameters, without image features) to isolate the actual contribution of the image modality.
+8. **Export** — the trained Random Forest, numeric scaler, and city encoder were saved with `joblib` for reuse (the CNN itself doesn't need saving, since it's the standard pretrained ResNet50).
+
+## Key Results / Observations
+
+| Model | MAE | RMSE |
+|---|---|---|
+| Tabular-only baseline | 
+| Multimodal (image + tabular) | 
+
+- Best Random Forest hyperparameters: `[FILL IN from Step 12 best_params_]`
+- Adding image features [**improved / did not meaningfully improve**] prediction accuracy relative to the tabular-only baseline — see the feature-group importance chart for how much predictive weight came from image features vs. numeric tabular vs. city.
+- MAE represents `[FILL IN]`% of the average test-set house price (~$[FILL IN mean price]).
+- *(Add 1-2 sentences here once you see the predicted-vs-actual and residual plots — e.g. whether errors are roughly balanced across price ranges, or whether the model under/over-predicts for expensive homes specifically.)*
+
+## Repository Structure
